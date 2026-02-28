@@ -509,6 +509,8 @@ public function get_sales_data()
                   ->join('customers','customers.customerID = sales.customerID','left')
                   ->join('users','users.uid = sales.regby','left')
                   ->where('sales.compid',$_SESSION['compid'])
+                  ->order_by('sales.saleID','DESC')
+                  ->limit(5000)
                   ->get()
                   ->result();
     }
@@ -527,10 +529,304 @@ public function get_sales_data()
                   ->from('sales')
                   ->join('customers','customers.customerID = sales.customerID','left')
                   ->join('users','users.uid = sales.regby','left')
+                  ->order_by('sales.saleID','DESC')
+                  ->limit(5000)
                   ->get()
                   ->result();
     }
   return $query;  
+}
+public function get_dailyproduct_sstock_data($sdate,$edate,$product)
+  {
+      
+    // if($catid == "ALL")
+    // {
+    //       $emp = $this->db->select('productID')
+    //             ->from('products')
+    //             ->get()
+    //             ->result_array();
+    //         // var_dump($emp); exit();
+    //       $emp_id = array_map (function($value){
+    //       return $value['productID'];
+    //       },$emp);
+    //         //var_dump($emp_id); exit();
+    //       if($emp_id == NULL)
+    //           {
+    //           $empid = 0;
+    //           }
+    //       else{
+    //           $empid = $emp_id;
+    //           }
+              
+    //      $query = $this->db->select('stock.*,products.productName,products.productcode,products.pprice,products.sprice,products.categoryID,products.unit,purchase_product.pprice as purPrice,purchase_product.sprice as salePrice')
+    //             ->from('stock')
+    //             ->join('products','products.productID = stock.product','left')
+    //             ->join('purchase_product','purchase_product.productID = stock.product','left')
+    //             ->where_in('stock.product',$empid)
+    //             ->where('totalPices > 0')
+    //             ->where('DATE(stock.regdate) >=',$sdate)
+    //             ->where('DATE(stock.regdate) <=',$edate)
+    //             ->group_by('batch')
+    //             ->get()
+    //             ->result();
+                        
+    //         return $query;  
+            
+    // }
+    // else{
+    //     $emp = $this->db->select('productID')
+    //             ->from('products')
+    //             ->get()
+    //             ->result_array();
+    //         //var_dump($emp); exit();
+    //       $emp_id = array_map (function($value){
+    //       return $value['productID'];
+    //       },$emp);
+    //         //var_dump($emp_id); exit();
+    //       if($emp_id == NULL)
+    //           {
+    //           $empid = 0;
+    //           }
+    //       else{
+    //           $empid = $emp_id;
+    //           }
+              
+    //       $query = $this->db->select('stock.*,products.productName,products.productcode,products.pprice,products.sprice')
+    //                     ->from('stock')
+    //                     ->join('products','products.productID = stock.product','left')
+    //                     ->where('DATE(stock.regdate) >=',$sdate)
+    //                     ->where('DATE(stock.regdate) <=',$edate)
+    //                     ->where('products.categoryID',$catid)
+    //                     ->group_by('batch')
+    //                     ->get()
+    //                     ->result();
+                        
+    //         return $query;  
+    // }
+    if($product == 'All')
+    {
+         $query = $this->db->select('stock.*,products.productName,products.productcode,products.pprice,products.sprice,products.categoryID,products.unit,purchase_product.pprice as purPrice,purchase_product.sprice as salePrice')
+                ->from('stock')
+                ->join('products','products.productID = stock.product','left')
+                ->join('purchase_product','purchase_product.productID = stock.product','left')
+                // ->where_in('stock.product',$product)
+                ->where('totalPices > 0')
+                ->where('DATE(stock.regdate) >=',$sdate)
+                ->where('DATE(stock.regdate) <=',$edate)
+                ->group_by('batch')
+                ->get()
+                ->result();
+                        
+            return $query;
+    }
+    else{
+        $query = $this->db->select('stock.*,products.productName,products.productcode,products.pprice,products.sprice,products.categoryID,products.unit,purchase_product.pprice as purPrice,purchase_product.sprice as salePrice')
+                ->from('stock')
+                ->join('products','products.productID = stock.product','left')
+                ->join('purchase_product','purchase_product.productID = stock.product','left')
+                ->where_in('stock.product',$product)
+                ->where('totalPices > 0')
+                ->where('DATE(stock.regdate) >=',$sdate)
+                ->where('DATE(stock.regdate) <=',$edate)
+                ->group_by('batch')
+                ->get()
+                ->result();
+                        
+            return $query;
+    }
+}
+public function get_monthproduct_sstock_data($month,$year,$product)
+  {
+      
+    // if($catid == "ALL")
+    // {
+    //     $emp = $this->db->select('productID')
+    //             ->from('products')
+    //             ->get()
+    //             ->result_array();
+    //         //var_dump($emp); exit();
+    //       $emp_id = array_map (function($value){
+    //       return $value['productID'];
+    //       },$emp);
+    //         //var_dump($emp_id); exit();
+    //       if($emp_id == NULL)
+    //           {
+    //           $empid = 0;
+    //           }
+    //       else{
+    //           $empid = $emp_id;
+    //           }
+              
+    //      $query = $this->db->select('stock.*,products.productName,products.productcode,products.pprice,products.sprice,products.categoryID,products.unit,purchase_product.pprice as purPrice,purchase_product.sprice as salePrice')
+    //             ->from('stock')
+    //             ->join('products','products.productID = stock.product','left')
+    //             ->join('purchase_product','purchase_product.productID = stock.product','left')
+    //             ->where_in('stock.product',$empid)
+    //             ->where('totalPices > 0')
+    //             ->where('MONTH(stock.regdate)', $month)
+    //             ->where('YEAR(stock.regdate)', $year)
+    //             ->group_by('batch')
+    //             ->get()
+    //             ->result();
+                        
+    //         return $query; 
+    // }
+    // else{
+    //      $emp = $this->db->select('productID')
+    //             ->from('products')
+    //             ->get()
+    //             ->result_array();
+    //         //var_dump($emp); exit();
+    //       $emp_id = array_map (function($value){
+    //       return $value['productID'];
+    //       },$emp);
+    //         //var_dump($emp_id); exit();
+    //       if($emp_id == NULL)
+    //           {
+    //           $empid = 0;
+    //           }
+    //       else{
+    //           $empid = $emp_id;
+    //           }
+              
+    //       $query = $this->db->select('stock.*,products.productName,products.productcode,products.pprice,products.sprice')
+    //                     ->from('stock')
+    //                     ->join('products','products.productID = stock.product','left')
+    //                     ->where('MONTH(stock.regdate)', $month)
+    //                     ->where('YEAR(stock.regdate)', $year)
+    //                     ->where('products.categoryID',$catid)
+    //                     ->group_by('batch')
+    //                     ->get()
+    //                     ->result();
+                        
+    //         return $query;
+    // }
+    if($product == 'All')
+    {
+                 $query = $this->db->select('stock.*,products.productName,products.productcode,products.pprice,products.sprice,products.categoryID,products.unit,purchase_product.pprice as purPrice,purchase_product.sprice as salePrice')
+                ->from('stock')
+                ->join('products','products.productID = stock.product','left')
+                ->join('purchase_product','purchase_product.productID = stock.product','left')
+                // ->where_in('stock.product',$product)
+                ->where('totalPices > 0')
+                ->where('MONTH(stock.regdate)', $month)
+                ->where('YEAR(stock.regdate)', $year)
+                ->group_by('batch')
+                ->get()
+                ->result();
+                        
+            return $query; 
+    }
+    else{
+        $query = $this->db->select('stock.*,products.productName,products.productcode,products.pprice,products.sprice,products.categoryID,products.unit,purchase_product.pprice as purPrice,purchase_product.sprice as salePrice')
+                ->from('stock')
+                ->join('products','products.productID = stock.product','left')
+                ->join('purchase_product','purchase_product.productID = stock.product','left')
+                ->where_in('stock.product',$product)
+                ->where('totalPices > 0')
+                ->where('MONTH(stock.regdate)', $month)
+                ->where('YEAR(stock.regdate)', $year)
+                ->group_by('batch')
+                ->get()
+                ->result();
+                        
+            return $query; 
+    }
+    
+}
+public function get_yearproduct_sstock_data($year,$product)
+  {
+      
+    // if($catid == 'ALL')
+    // {
+    //      $emp = $this->db->select('productID')
+    //             ->from('products')
+    //             ->get()
+    //             ->result_array();
+    //         //var_dump($emp); exit();
+    //       $emp_id = array_map (function($value){
+    //       return $value['productID'];
+    //       },$emp);
+    //         //var_dump($emp_id); exit();
+    //       if($emp_id == NULL)
+    //           {
+    //           $empid = 0;
+    //           }
+    //       else{
+    //           $empid = $emp_id;
+    //           }
+              
+    //       $query = $this->db->select('stock.*,products.productName,products.productcode,products.pprice,products.sprice,products.categoryID,products.unit,purchase_product.pprice as purPrice,purchase_product.sprice as salePrice')
+    //             ->from('stock')
+    //             ->join('products','products.productID = stock.product','left')
+    //             ->join('purchase_product','purchase_product.productID = stock.product','left')
+    //             ->where_in('stock.product',$empid)
+    //             ->where('totalPices > 0')
+    //             ->where('YEAR(stock.regdate)',$year)
+    //             ->group_by('batch')
+    //             ->get()
+    //             ->result();
+                        
+    //         return $query;
+    // }
+    if($product == 'All'){
+        $query = $this->db->select('stock.*,products.productName,products.productcode,products.pprice,products.sprice,products.categoryID,products.unit,purchase_product.pprice as purPrice,purchase_product.sprice as salePrice')
+                ->from('stock')
+                ->join('products','products.productID = stock.product','left')
+                ->join('purchase_product','purchase_product.productID = stock.product','left')
+                // ->where_in('stock.product',$product)
+                ->where('totalPices > 0')
+                ->where('YEAR(stock.regdate)',$year)
+                ->group_by('batch')
+                ->get()
+                ->result();
+                        
+            return $query;
+    }
+     else{
+        $query = $this->db->select('stock.*,products.productName,products.productcode,products.pprice,products.sprice,products.categoryID,products.unit,purchase_product.pprice as purPrice,purchase_product.sprice as salePrice')
+                ->from('stock')
+                ->join('products','products.productID = stock.product','left')
+                ->join('purchase_product','purchase_product.productID = stock.product','left')
+                ->where_in('stock.product',$product)
+                ->where('totalPices > 0')
+                ->where('YEAR(stock.regdate)',$year)
+                ->group_by('batch')
+                ->get()
+                ->result();
+                        
+            return $query;
+    }
+    //   else{
+    //       $emp = $this->db->select('productID')
+    //             ->from('products')
+    //             ->get()
+    //             ->result_array();
+    //         //var_dump($emp); exit();
+    //       $emp_id = array_map (function($value){
+    //       return $value['productID'];
+    //       },$emp);
+    //         //var_dump($emp_id); exit();
+    //       if($emp_id == NULL)
+    //           {
+    //           $empid = 0;
+    //           }
+    //       else{
+    //           $empid = $emp_id;
+    //           }
+              
+    //       $query = $this->db->select('stock.*,products.productName,products.productcode,products.pprice,products.sprice')
+    //                     ->from('stock')
+    //                     ->join('products','products.productID = stock.product','left')
+    //                     ->where('YEAR(stock.regdate)',$year)
+    //                     ->where('products.categoryID',$catid)
+    //                     ->group_by('batch')
+    //                     ->get()
+    //                     ->result();
+                        
+    //         return $query;
+    //   }     
+    
 }
 
 public function get_dsales_data($sdate,$edate,$customer,$employee,$compid)
@@ -1083,6 +1379,38 @@ public function get_purchses_data()
     }
   return $query;
 }
+public function get_purchases_data_report() // Corrected function name to get_purchases_data
+{
+    if ($_SESSION['role'] > 2) {
+        $query = $this->db->select('
+                          purchase.*,
+                          suppliers.sup_id,
+                          suppliers.supplierName,
+                          purchase_product.*,
+                          product.productName,
+                          product.pprice,
+                          product.sprice')
+            ->from('purchase')
+            ->join('suppliers', 'suppliers.supplierID = purchase.supplier', 'left')
+            ->join('purchase_product', 'purchase_product.purchaseID = purchase.purchaseID')
+            ->join('product', 'product.productID = purchase_product.productID')
+            ->where('purchase.compid', $_SESSION['compid'])
+            ->get()
+            ->result();
+    } else {
+        $query = $this->db->select('
+                          purchase.*,
+                          suppliers.sup_id,
+                          suppliers.supplierName,
+                          purchase_product.*')
+            ->from('purchase')
+            ->join('suppliers', 'suppliers.supplierID = purchase.supplier', 'left')
+            ->join('purchase_product', 'purchase_product.purchaseID = purchase.purchaseID')
+            ->get()
+            ->result();
+    }
+    return $query;
+}
 
 public function get_dpurchses_data($sdate,$edate,$supid,$compid)
   {
@@ -1267,9 +1595,9 @@ public function get_ypurchses_data($year,$supid,$compid)
 public function total_stock_sell_amount()
   {
   $total=0;
-  $query = $this->db->select("totalPices, products.sprice")
+  $query = $this->db->select("totalPices, purchase_product.sprice")
                   ->FROM('stock')
-                  ->join('products', 'products.productID = stock.product', 'left')
+                  ->join('purchase_product', 'purchase_product.batch = stock.batch', 'left')
                 //   ->where('compid',$_SESSION['compid'])
                   ->get()
                   ->result();
@@ -1282,9 +1610,9 @@ public function total_stock_sell_amount()
 public function total_stock_purchase_amount()
   {
   $total=0;
-  $query = $this->db->select("totalPices, products.pprice")
+  $query = $this->db->select("totalPices, purchase_product.pprice")
                   ->FROM('stock')
-                  ->join('products', 'products.productID = stock.product', 'left')
+                  ->join('purchase_product', 'purchase_product.batch = stock.batch', 'left')
                 //   ->where('compid',$_SESSION['compid'])
                   ->get()
                   ->result();
@@ -1771,7 +2099,7 @@ public function return_cust_ledger_data($customer)
 
 public function sales_dcust_ledger_data($customer,$sdate,$edate)
   {
-  $query = $this->db->select("saleDate,invoice_no,totalAmount,paidAmount,dueamount,discountAmount, accountType, accountNo")
+  $query = $this->db->select("saleDate,saleID,discount,invoice_no,totalAmount,paidAmount,dueamount,discountAmount, accountType, accountNo")
                   ->FROM('sales')
                   ->WHERE('customerID',$customer)
                   ->where('saleDate >=', $sdate)
@@ -1811,7 +2139,7 @@ public function return_dcust_ledger_data($customer,$sdate,$edate)
 
 public function sales_mcust_ledger_data($customer,$month,$year)
   {
-  $query = $this->db->select("saleDate,invoice_no,totalAmount,paidAmount,dueamount,discountAmount")
+  $query = $this->db->select("saleDate,saleID,discount,accountType,accountNo,invoice_no,totalAmount,paidAmount,dueamount,discountAmount")
                   ->FROM('sales')
                   ->WHERE('customerID',$customer)
                   ->where('MONTH(saleDate)',$month)
@@ -1848,7 +2176,7 @@ public function return_mcust_ledger_data($customer,$month,$year)
 
 public function sales_ycust_ledger_data($customer,$year)
   {
-  $query = $this->db->select("saleDate,invoice_no,totalAmount,paidAmount,dueamount,discountAmount")
+  $query = $this->db->select("saleDate,saleID,discount,invoice_no,accountType,accountNo,totalAmount,paidAmount,dueamount,discountAmount")
                   ->FROM('sales')
                   ->WHERE('customerID',$customer)
                   ->where('YEAR(saleDate)',$year)
@@ -3143,7 +3471,7 @@ public function total_dsales_product($sdate,$edate)
   $query = $this->db->select("
                         SUM(sale_product.quantity) as tq,
                         SUM(sale_product.totalPrice) as ta,
-                        sale_product.productID,
+                        sale_product.productID,sale_product.batch,
                         sales.compid,
                         sales.saleDate,
                         sales.saleID")
@@ -3152,7 +3480,8 @@ public function total_dsales_product($sdate,$edate)
                     ->where('compid',$_SESSION['compid'])
                     ->where('saleDate >=', $sdate)
                     ->where('saleDate <=', $edate)
-                    ->group_by('productID')
+                    ->group_by('sale_product.batch')
+                    // ->group_by('productID')
                     ->get()
                     ->result();
   return $query;
@@ -4172,11 +4501,13 @@ public function get_product_stock_data()
       $empid = $emp_id;
       }
       
-  $query = $this->db->select('stock.*,products.productName,products.productcode,products.pprice,products.sprice,products.categoryID,products.unit')
+  $query = $this->db->select('stock.*,products.productName,products.productcode,products.pprice,products.sprice,products.categoryID,products.unit,purchase_product.pprice as purPrice,purchase_product.sprice as salePrice')
                 ->from('stock')
                 ->join('products','products.productID = stock.product','left')
+                ->join('purchase_product','purchase_product.productID = stock.product','left')
                 ->where_in('stock.product',$empid)
                 ->where('totalPices > 0')
+                ->group_by('batch')
                 ->get()
                 ->result();
   return $query;  
@@ -4700,7 +5031,117 @@ public function get_top_sales_product_data()
 
   return $query;  
 }
+public function get_top_sales_product_data_daily($sdate,$edate,$dproduct)
+    {
+        
+    if($dproduct == 'All')
+    {
+        $query = $this->db->select('sma_units.unitName,sales.compid,products.productName,products.image,products.productcode,SUM(sale_product.quantity) as total')
+                    ->from('sale_product')
+                    ->join('products','products.productID = sale_product.productID','left')
+                    ->join('sma_units','products.unit = sma_units.id','left')
+                    ->join('sales','sales.saleID = sale_product.saleID','left')
+                    ->where('sales.compid',$_SESSION['compid'])
+                    ->where('DATE(sales.saleDate)>=',$sdate)
+                    ->where('DATE(sales.saleDate)>=',$edate)
+                    ->group_by('sale_product.productID')
+                    ->order_by('total','DESC')
+                    ->get()
+                    ->result();
+    }
+    else{
+        $query = $this->db->select('sma_units.unitName,sales.compid,products.productName,products.image,products.productcode,SUM(sale_product.quantity) as total')
+                    ->from('sale_product')
+                    ->join('products','products.productID = sale_product.productID','left')
+                    ->join('sma_units','products.unit = sma_units.id','left')
+                    ->join('sales','sales.saleID = sale_product.saleID','left')
+                    ->where('sales.compid',$_SESSION['compid'])
+                    ->where('DATE(sales.saleDate)>=',$sdate)
+                    ->where('DATE(sales.saleDate)>=',$edate)
+                    ->where('sale_product.productID',$dproduct)
+                    ->group_by('sale_product.productID')
+                    ->order_by('total','DESC')
+                    ->get()
+                    ->result();
+    }
 
+
+  return $query;  
+}
+public function get_top_sales_product_data_monthly($month,$year,$product1)
+    {
+        
+    if($product1 == 'All')
+    {
+        $query = $this->db->select('sma_units.unitName,sales.compid,products.productName,products.image,products.productcode,SUM(sale_product.quantity) as total')
+                    ->from('sale_product')
+                    ->join('products','products.productID = sale_product.productID','left')
+                    ->join('sma_units','products.unit = sma_units.id','left')
+                    ->join('sales','sales.saleID = sale_product.saleID','left')
+                    ->where('sales.compid',$_SESSION['compid'])
+                    ->where('MONTH(sales.saleDate)',$month)
+                    ->where('YEAR(sales.saleDate)',$year)
+                    ->group_by('sale_product.productID')
+                    ->order_by('total','DESC')
+                    ->get()
+                    ->result();
+    }
+    else{
+        $query = $this->db->select('sma_units.unitName,sales.compid,products.productName,products.image,products.productcode,SUM(sale_product.quantity) as total')
+                    ->from('sale_product')
+                    ->join('products','products.productID = sale_product.productID','left')
+                    ->join('sma_units','products.unit = sma_units.id','left')
+                    ->join('sales','sales.saleID = sale_product.saleID','left')
+                    ->where('sales.compid',$_SESSION['compid'])
+                    ->where('MONTH(sales.saleDate)',$month)
+                    ->where('YEAR(sales.saleDate)',$year)
+                    ->where('sale_product.productID',$product1)
+                    ->group_by('sale_product.productID')
+                    ->order_by('total','DESC')
+                    ->get()
+                    ->result();
+    }
+
+
+  return $query;  
+}
+
+public function get_top_sales_product_data_yearly($year,$Yproduct)
+    {
+        
+    if($Yproduct == 'All')
+    {
+        $query = $this->db->select('sma_units.unitName,sales.compid,products.productName,products.image,products.productcode,SUM(sale_product.quantity) as total')
+                    ->from('sale_product')
+                    ->join('products','products.productID = sale_product.productID','left')
+                    ->join('sma_units','products.unit = sma_units.id','left')
+                    ->join('sales','sales.saleID = sale_product.saleID','left')
+                    ->where('sales.compid',$_SESSION['compid'])
+                    ->where('YEAR(sales.saleDate)',$year)
+                    // ->where('DATE(sales.saleDate)>=',$edate)
+                    ->group_by('sale_product.productID')
+                    ->order_by('total','DESC')
+                    ->get()
+                    ->result();
+    }
+    else{
+        $query = $this->db->select('sma_units.unitName,sales.compid,products.productName,products.image,products.productcode,SUM(sale_product.quantity) as total')
+                    ->from('sale_product')
+                    ->join('products','products.productID = sale_product.productID','left')
+                    ->join('sma_units','products.unit = sma_units.id','left')
+                    ->join('sales','sales.saleID = sale_product.saleID','left')
+                    ->where('sales.compid',$_SESSION['compid'])
+                    ->where('YEAR(sales.saleDate)',$year)
+                    ->where('sale_product.productID',$Yproduct)
+                    ->group_by('sale_product.productID')
+                    ->order_by('total','DESC')
+                    ->get()
+                    ->result();
+    }
+
+
+  return $query;  
+}
 public function total_service_sales_amount()
   {
   $query = $this->db->select("SUM(pAmount) as total,SUM(amount) as ttotal")
@@ -5070,9 +5511,15 @@ public function get_sales_products_data($sid)
                 ->result();
 }
 
+public function get_total_records($table, $where = array())
+  {
+  $this->db->where($where);
+  return $this->db->count_all_results($table);
+}
+
 public function get_customer_limit_data()
   {
-  $customer = $this->db->select('customerID,custSalary')
+  $customer = $this->db->select('customerID,custOLimit,custSalary,balance')
                 ->from('customers')
                 ->get()
                 ->result();
@@ -5124,10 +5571,21 @@ public function get_customer_limit_data()
     $where = array(
       'customerID' => $value->customerID
                 );
-
+                
+    $tdue = (($value->balance+$sa)-($va+$ra));
+    
+    if($tdue > $value->custOLimit)
+      {
+      $custltd = $tdue;
+      }
+    else
+      {
+      $custltd = $value->custOLimit;
+      }
     $data = [
-      'custLimit' => (((($value->custSalary*40)/100)+$va+$ra)-$sa),
-      'upby'      => $_SESSION['uid']
+      'custOLimit' => $custltd,
+      'custLimit'  => (($custltd+$va+$ra)-$sa),
+      'upby'       => $_SESSION['uid']
             ];
        
     $this->pm->update_data('customers',$data,$where);
@@ -5462,6 +5920,21 @@ public function get_product_stock_price($pid,$batch)
                   ->where('stock.batch',$batch)
                   ->get()
                   ->row();
+  return $query;  
+}
+
+public function get_sales_list_data($limit,$offset)
+  {
+  $query = $this->db->select('
+                          sales.*,
+                          customers.customerName,
+                          customers.mobile')
+                  ->from('sales')
+                  ->join('customers','customers.customerID = sales.customerID','left')
+                  ->order_by('saleID', 'desc')
+                  ->limit($limit,$offset)
+                  ->get()
+                  ->result();
   return $query;  
 }
 
